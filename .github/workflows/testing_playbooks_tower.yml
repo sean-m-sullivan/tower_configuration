@@ -21,20 +21,20 @@ jobs:
         run: 'echo "$OPENSHIFT_PASSWORD" > openshift_password'
         shell: bash
         env:
-          OPENSHIFT_PASSWORD: ${{ env.OPENSHIFT_PASSWORD }}
+          OPENSHIFT_PASSWORD: ${{ secrets.OPENSHIFT_PASSWORD }}
 
       - name: Set ansible vault key
         run: 'echo "$OPENSHIFT_USER" > openshift_username'
         shell: bash
         env:
-          OPENSHIFT_USER: ${{ env.OPENSHIFT_USER }}
+          OPENSHIFT_USER: ${{ secrets.OPENSHIFT_USER }}
 
       - name: Authenticate and set context
         uses: redhat-actions/oc-login@v1
         with:
           openshift_server_url: https://api.crc.testing:6443
-          openshift_username: ${{ env.OPENSHIFT_USER }}
-          openshift_password: ${{ env.OPENSHIFT_PASSWORD }}
+          openshift_username: ${{ secrets.OPENSHIFT_USER }}
+          openshift_password: ${{ secrets.OPENSHIFT_PASSWORD }}
           insecure_skip_tls_verify: true
 
       - name: "Create Tower project"
