@@ -17,18 +17,6 @@ jobs:
         with:
           version: '4.6'
 
-      - name: Set ansible vault key
-        run: 'echo "$OPENSHIFT_PASSWORD" > openshift_password'
-        shell: bash
-        env:
-          OPENSHIFT_PASSWORD: ${{ secrets.OPENSHIFT_PASSWORD }}
-
-      - name: Set ansible vault key
-        run: 'echo "$OPENSHIFT_USER" > openshift_username'
-        shell: bash
-        env:
-          OPENSHIFT_USER: ${{ secrets.OPENSHIFT_USER }}
-
       - name: Authenticate and set context
         uses: redhat-actions/oc-login@v1
         with:

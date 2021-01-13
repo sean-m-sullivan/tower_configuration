@@ -3,7 +3,7 @@
 
 - name: Install Ansible Tower on OCP
   hosts: localhost
-  gather_facts: false
+  gather_facts: true
   become: false
   vars:
     tower_release_version: latest
