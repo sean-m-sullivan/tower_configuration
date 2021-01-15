@@ -9,6 +9,7 @@ ENV RUNNER_LABELS ""
 # Install pip and other requirements.
 RUN dnf makecache \
   && dnf -y install \
+    hostname \
     python3-pip \
     sudo \
     which \
