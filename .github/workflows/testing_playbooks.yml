@@ -28,13 +28,11 @@ jobs:
 
       - name: setup for awx docker build
         run: |
-          ls .github/awx/awx
-          ls .github/awx/awx/settings/
           cp .github/awx/awx/settings/local_settings.py.docker_compose .github/awx/awx/settings/local_settings.py
           cd .github/awx && make docker-compose-build
 
       - name: "Build AWX stack"
-        run: cd .github/awx/installer && make docker-compose
+        run: cd .github/awx && make docker-compose
 
       - name: "Wait for awx to be alive"
         uses: nev7n/wait_for_response@v1
