@@ -28,6 +28,8 @@ jobs:
 
       - name: setup for awx docker build
         run: |
+          ls .github/awx
+          ls .github/awx/settings/
           cp .github/awx/settings/local_settings.py.docker_compose .github/awx/settings/local_settings.py
           cd .github/awx && make docker-compose-build
 
