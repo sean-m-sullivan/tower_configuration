@@ -7,6 +7,7 @@
 exclude_paths:
   - roles/master_role_example/
   - .github/workflows/testing_playbooks.yml
+  - .github/workflows/testing_playbooks_docker.yml
   - .github/workflows/testing_playbooks_awx.yml
   - playbooks/collections/requirements.yml
   - playbooks/tower_configs/ssh_private_key.yml
