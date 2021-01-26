@@ -26,9 +26,15 @@ jobs:
       - name: Display Versions
         run: which python && pip --version && ansible --version
 
+      - name: setup for awx docker build
+        timeout-minutes: 25
+        run: |
+          cp .github/awx/awx/settings/local_settings.py.docker_compose .github/awx/awx/settings/local_settings.py
+          cd .github/awx && make docker-compose-build
+
       - name: "Build AWX stack"
-        timeout-minutes: 12
-        run: cd .github/awx/installer && ansible-playbook -i inventory install.yml -e create_preload_data=false
+        timeout-minutes: 25
+        run: cd .github/awx && make docker-compose
 
       - name: "Wait for awx to be alive"
         uses: nev7n/wait_for_response@v1
