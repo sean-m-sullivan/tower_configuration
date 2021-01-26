@@ -1,5 +1,5 @@
 ---
-name: Run Test Playbooks with playbook
+name: Run Test Playbooks with docker
 
 on: [push, pull_request]
 
@@ -26,17 +26,28 @@ jobs:
       - name: Display Versions
         run: which python && pip --version && ansible --version
 
+      - name: setup for awx docker build
+        timeout-minutes: 25
+        run: |
+          cp .github/awx/awx/settings/local_settings.py.docker_compose .github/awx/awx/settings/local_settings.py
+          cd .github/awx && make docker-compose-build
+
       - name: "Build AWX stack"
-        timeout-minutes: 12
-        run: cd .github/awx/installer && ansible-playbook -i inventory install.yml -e create_preload_data=false
+        timeout-minutes: 25
+        run: cd .github/awx && make docker-compose
 
       - name: "Wait for awx to be alive"
         uses: nev7n/wait_for_response@v1
         with:
-          url: 'http://localhost/api/v2/ping'
+          url: 'https://localhost:8043/api/v2/ping'
           responseCode: 200
           timeout: 300000  # Wait max 5 mins for response.
           interval: 3000
+
+      - name: initiate awx docker
+        run: |
+          docker exec -d tools_awx_1 awx-manage createsuperuser
+          docker exec -d tools_awx_1 awx-manage create_preload_data
 
       - name: "Install Galaxy dependencies"
         run: ansible-galaxy collection install -r .github/collections/requirements.yml
@@ -47,7 +58,7 @@ jobs:
           time: '20s'
 
       - name: "Perform playbook tests"
-        run: ansible-playbook playbooks/configure_tower.yml -e tower_hostname=http://localhost -e tower_username=admin -e tower_password=password
+        run: ansible-playbook playbooks/configure_tower.yml -e tower_hostname=https://localhost:8043 -e tower_username=admin -e tower_password=password
 
       - name: "Perform export model playbook tests"
-        run: ansible-playbook playbooks/configure_tower_export_model.yml -e tower_hostname=http://localhost -e tower_username=admin -e tower_password=password
+        run: ansible-playbook playbooks/configure_tower_export_model.yml -e tower_hostname=https://localhost:8043 -e tower_username=admin -e tower_password=password
